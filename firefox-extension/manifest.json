@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "UATR Companion",
+  "version": "1.0",
+  "description": "Helps retreive cookies for setting up UATR.",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://apps.thomasmore.edu/AssetTracker/*"
+      ],
+      "js": [
+        "borderify.js"
+      ]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "uatr-companion@lukeh990.io"
+    }
+  }
+}
