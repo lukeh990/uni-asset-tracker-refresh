@@ -12,7 +12,7 @@ Don't mind this. Just somewhere for me to put notes.
 
 ### Actual API
 
-GET /Asset
+GET /Asset/Edit/[ID]
 
 POST /Asset/SearchAssetsByAttribute
 
@@ -31,14 +31,21 @@ POST /Asset/SearchAssetsByAttribute
   SerialNumber String
   IsActive String
   __RequestVerificationToken CRSF_TOKEN
-  X-Requested-WithS tring ALWAYS "XMLHttpRequest"
+  X-Requested-With String ALWAYS "XMLHttpRequest"
 ```
 
 POST /IDLookup/CXIDLookupSearch
 
 ```txt
   id String
-  LastName String
+  lastName String
+```
+
+POST /RoomLookup/CXIDLookupSearch
+
+```txt
+  fullName String
+  lastName String ALWAYS "RoomIDPartial" or "LocationPartial"
 ```
 
 POST /Asset/Edit/[ID]
@@ -59,34 +66,50 @@ POST /Asset/Edit/[ID]
   AssetType_Id String
   SerialNumber String
   ADescription String
-  PurchaseDate String
+  PurchaseDate String (ISO8601)
   Batch_Id String
   WarrantyLength String
-  WarrantyEnd String
-  RemovalDate String
+  WarrantyEnd String (ISO8601)
+  RemovalDate String (ISO8601)
   RemovalMethod_Id String
   ServiceTag String
   KY_DOE_ID String
-  IsActive [String]
-    0	String
-    1 String ALWAYS "false"
-  Verified [String]
-    0	String
-    1 String ALWAYS "false"
+  IsActive String
+  Verified String
   CC_Staff_Id String
-  __RequestVerificationToken String
+  __RequestVerificationToken CRSF_TOKEN
 ```
 
 ### Desired API
 
 ```rust
-fn find_assets(findable_asset FindableAsset) -> Result<Vec<Asset>, ApiError> {}
+struct IdNamePair {
+  id: String,
+  name: String
+}
 
-fn edit_asset(editable_asset EditableAsst) -> Result<(), ApiError> {}
+struct RemovalInfo {
+  removal_date: NaiveDate,
+  removal_method: IdNamePair
+}
 
-fn get_asset(asset_tag String) -> Result<Asset, ApiError> {}
-
-fn populate_indices() -> Result<Indices, ApiError> {}
-
-fn search_assignee(id String, last_name String) -> Result<Assignee, ApiError> {}
+struct Asset {
+  id: String,
+  asset_tag_number: String,
+  assignee: Option<IdNamePair>,
+  user_type: Option<IdNamePair>,
+  department: Option<IdNamePair>,
+  room: Option<IdNamePair>,
+  asset_type: IdNamePair,
+  serial_number: String,
+  description: String,
+  purchase_date: Option<NaiveDate>,
+  batch_id: Option<IdNamePair>,
+  warranty_length: Option<String>,
+  removal_info: Option<RemovalInfo>,
+  service_tag: String,
+  ky_doe_id: String,
+  is_active: bool,
+  verified_by: Option<IdNamePair>
+}
 ```
