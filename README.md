@@ -1,4 +1,4 @@
-# Universithy Asset Tracker Refresh
+# University Asset Tracker Refresh
 
 A refreshed frontend for my uni's in house asset tracker.
 
